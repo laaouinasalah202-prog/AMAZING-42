@@ -1,4 +1,4 @@
-How Git knows what to merge
+#How Git knows what to merge
 
 Git looks at three versions of your code:
 
