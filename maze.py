@@ -1,71 +1,82 @@
+import random
+
+
 def intitial_map(width: int, high: int):
     cell = {
-        "visited": False,
-        "north": 1,
-        "west": 1,
-        "east": 1,
-        "south": 1
+
     }
 
     maze = []
     for r in range(high):
         row = []
         for col in range(width):
-            row.append(cell)
+            row.append({
+                "visited": False,
+                "Walls": [1, 1, 1, 1]
+            }
+        )
         maze.append(row)
     return maze
 
 
-def maze_build(maze, coord):
+def maze_build(maze):
     
     visited = [[False for i in maze[0]] for a in maze]
-
-    def check_maze(maze):
-        for i in maze:
-            for j in i:
-                if j["visited"] == False:
-                    return 0
-        return 1
 
     dirs = [
     (0, -1, 0, 2),  # up
     (1, 0, 1, 3),   # right
     (0, 1, 2, 0),   # down
     (-1, 0, 3, 1)   # left
-]
-    def backtrack(self, x, y):
-        if check_maze(maze):
-            return
-        pos = maze[x][y]
-        choice = []
-    
+    ]
+    def check_boundry(x, y):
+        return 0 <= x < len(maze) and 0 <= y < len(maze[0])
 
+    def backtrack(x, y):
+        visited[x][y] = True
+        maze[x][y]["visited"] = True
 
-# print(check_maze(intitial_map(3, 2)))
+        random.shuffle(dirs)        
+        
+        for dx, dy, wall, opp_wall  in dirs:
+            nx, ny = x + dx, y + dy
+            if check_boundry(nx, ny) and not visited[nx][ny]:
+                maze[x][y]["Walls"][wall] = False
+                maze[nx][ny]["Walls"][opp_wall] = False
+                backtrack(nx, ny)
+    backtrack(0, 0)
+    return maze
 
-def creat_maze(maze):
+def display_maze(maze):
 
-    maze = intitial_map(20, 20)
     m = maze[0]
-    high = 20
-    width = 20
+    high = len(maze)
+    width = len(maze[0])
     print("+" + "---+" * (width + 2))
     for h in range(high):
         top_line = "+"
         bottom_line = "+"
         middle_line = ""
         for w in range(width):
-            if maze[h][w]["north"]:
+            if maze[h][w]["Walls"][0]:
                 top_line += "---+"
-
-            if maze[h][w]["west"]:
+            else:
+                top_line += "   +"
+            if maze[h][w]["Walls"][1]:
                 middle_line += "|   "
-
-            if maze[h][w]["south"]:
+            else:
+                middle_line += "    "
+            if maze[h][w]["Walls"][2]:
                 bottom_line += "---+"
+            else:
+                bottom_line += "   +"
         middle_line += "|   #"
         print("    " + top_line)
         print("#   " + middle_line)
     print("    " + bottom_line )
     print("+" + "---+" * (width + 2))
 
+
+maze = intitial_map(10, 10)
+# maze = maze_build(maze) 
+display_maze(maze)
