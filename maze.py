@@ -151,21 +151,25 @@ def maze_build(maze, color):
         r1 , c1 = cell1
         r2 , c2 = cell2
 
+        r = 2
+        l = 8
+        up = 1
+        dn = 4
         if r1 == r2:
             if c1 < c2:
-                maze[r1][c1]["walls"] -= 2
-                maze[r2][c2]["walls"] -= 8
+                maze[r1][c1]["walls"] -= r
+                maze[r2][c2]["walls"] -= l
             elif c1 > c2:
-                maze[r1][c1]["walls"] -= 8
-                maze[r2][c2]["walls"] -= 2
+                maze[r1][c1]["walls"] -= l
+                maze[r2][c2]["walls"] -= r
 
         elif c1 == c2:
             if r1 < r2:
-                maze[r1][c1]["walls"] -= 4
-                maze[r2][c2]["walls"] -= 1
+                maze[r1][c1]["walls"] -= dn
+                maze[r2][c2]["walls"] -= up
             elif r1 > r2:
-                maze[r1][c1]["walls"] -= 1
-                maze[r2][c2]["walls"] -= 4
+                maze[r1][c1]["walls"] -= up
+                maze[r2][c2]["walls"] -= dn
 
     def backtrack(x, y, color):
         print_maze(maze, color)
