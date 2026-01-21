@@ -1,30 +1,6 @@
 import random
 import os
 
-def print_maze(maze):
-    line = "+"
-    for x in range(15):
-        line += "---+"
-    print(line)
-
-    for y in range(15):
-        line1 = "|"
-        line2 = "+"
-        for x in range(15):
-            cell = maze[x][y]["Walls"]
-            if sum(cell) == 4: 
-                line1 += "\033[41m   \033[0m"
-            else:
-                line1 += "   "
-            line1 += "|" if cell[1] else " "
-            line2 += "---+" if cell[2] else "   +"
-        print(line1)
-        print(line2)
-
-
-def show_maze(maze):
-    
-
 def intitial_map(width: int, high: int):
     maze = []
     for r in range(high):
@@ -32,53 +8,193 @@ def intitial_map(width: int, high: int):
         for col in range(width):
             row.append({
                 "visited": False,
-                "Walls": [1, 1, 1, 1]
+                "walls": 15
             }
         )
         maze.append(row)
     return maze
 
 
-def maze_build(maze):
+def print_maze(maze, colors):
+    width = len(maze[0])
+    hight = len(maze)
+    print("╔", end="")
+    cx = 0
+    while cx<len(maze[0]):
+        print("════", end="")
+        if cx < len(maze[0]) - 1:
+            if maze[0][cx]["walls"] >> 1 & 1 == 1:
+                print("╦", end="")
+            else:
+                print("═", end="")
+        cx+=1
+    print("╗")
+    for y in range(len(maze)):
+        x = 0
+        print("║", end="")
+        while x < width:
+            if x < width - 1:
+                if maze[y][x]["walls"] == 15:
+                     print(colors + " \U0001F606 " + "\033[0m"+"║", end = "")
+                elif maze[y][x]["walls"] >> 1 & 1 == 1:
+                    print("    ║", end = "")
+                else:
+                    print("     ", end="")
+            x+=1
+        if maze[y][width-1]["walls"] == 15:
+            print(colors +" \U0001F92B " + "\033[0m"+"║")
+        else:
+            print("    ║")
+
+        x = 0
+        while x < width - 1:
+            if y < hight - 1:
+                if x < width - 1:
+                    if x == 0:
+                        if maze[y][0]["walls"] >> 2 & 1 == 1:
+                            print("╠", end="")
+                        else:
+                            print("║", end="")
+                    if maze[y][x]["walls"] >> 2 & 1 == 1:
+                        print("════", end="")
+                        if all((
+                            maze[y][x + 1]["walls"] >> 2 & 1,
+                            maze[y + 1][x]["walls"] >> 1 & 1,
+                            maze[y][x]["walls"] >> 1 & 1,
+                        )):
+                            print("╬", end="")
+                    else:
+                        print("    ", end="")
+                    # print(" ", end="")
+                    if maze[y][x]["walls"] >> 2 & 1 == 1 and maze[y][x + 1]["walls"] >> 2 & 1 == 1:
+                        if maze[y][x]["walls"] >> 1 & 1 == 1 and maze[y + 1][x]["walls"] >> 1 & 1 == 0:
+                            print("╩", end="")
+                        if maze[y + 1][x]["walls"] >> 1 & 1 == 0 and  maze[y][x]["walls"] >> 1 & 1 == 0:
+                            print("═", end="")
+                        if  maze[y + 1][x]["walls"] >> 1 & 1 == 1 and maze[y][x]["walls"] >> 1 & 1 == 0:
+                            print("╦", end="")
+                    if maze[y][x + 1]["walls"] >> 2 & 1 == 0:
+                        if all((maze[y][x]["walls"] >> 2 & 1 == 0,
+                                maze[y + 1][x]["walls"] >> 1 & 1 == 0,
+                                maze[y][x]["walls"] >> 1 & 1 == 1,)):
+                            print(" ", end="")
+                        if all((maze[y][x]["walls"] >> 2 & 1 == 1,
+                            maze[y + 1][x]["walls"] >> 1 & 1 == 1,
+                            maze[y][x]["walls"] >> 1 & 1 == 0,)):
+                            print("╗",end="")
+                        if all((maze[y][x]["walls"] >> 2 & 1 == 1,
+                            maze[y + 1][x]["walls"] >> 1 & 1 == 1,
+                            maze[y][x]["walls"] >> 1 & 1 == 1,)):
+                            print("╣", end="")
+                        if all(( maze[y][x]["walls"] >> 2 & 1 == 0,
+                            maze[y + 1][x]["walls"] >> 1 & 1 == 1,
+                            maze[y][x]["walls"] >> 1 & 1 == 1,)):
+                            print("║", end="")
+                        if all((maze[y][x]["walls"] >> 2 & 1 == 1,
+                            maze[y + 1][x]["walls"] >> 1 & 1 == 0,
+                            maze[y][x]["walls"] >> 1 & 1 == 0,)):
+                            print(" ", end="")
+                        if all((maze[y][x]["walls"] >> 2 & 1 == 0,
+                            maze[y][x + 1]["walls"] >> 2 & 1 == 0,
+                            maze[y + 1][x]["walls"] >> 1 & 1 == 1,
+                            maze[y][x]["walls"] >> 1 & 1 == 0,)):
+                            print(" ", end="")
+                        if all((maze[y][x]["walls"] >> 2 & 1 == 1,
+                            maze[y][x + 1]["walls"] >> 2 & 1 == 0,
+                            maze[y + 1][x]["walls"] >> 1 & 1 == 0,
+                            maze[y][x]["walls"] >> 1 & 1 == 1,)):
+                            print("╝", end="")
+                    if  maze[y][x]["walls"] >> 2 & 1 == 0 and  maze[y][x + 1]["walls"] >> 2 & 1 == 1:
+                        if maze[y + 1][x]["walls"] >> 1 & 1 == 1 and maze[y][x]["walls"] >> 1 & 1 == 0:
+                            print("╔",end="")             
+                        if  maze[y + 1][x]["walls"] >> 1 & 1 == 0 and maze[y][x]["walls"] >> 1 & 1 == 1:
+                            print("╚",end="")
+                        if maze[y + 1][x]["walls"] >> 1 & 1 == 0 and maze[y][x]["walls"] >> 1 & 1 == 0:
+                            print(" ", end="")
+                        if  maze[y + 1][x]["walls"] >> 1 & 1 == 1 and  maze[y][x]["walls"] >> 1 & 1 == 1:
+                            print("╠", end="")     
+            x+=1
+        if y < hight - 1 :
+            if maze[y][x]["walls"] >> 2 & 1 == 1:
+                print("════╣")
+            else:
+                print("    ║")
+
+    print("╚", end="")
+    cx = 0
+    while cx < len(maze[hight-1]):
+        print("════", end="")
+        if cx < len(maze[hight-1]) - 1:
+            if maze[hight-1][cx]["walls"] >> 1 & 1 == 1:
+                print("╩", end="")
+            else:
+                print("═", end="")
+        cx+=1
+    print("╝")
+    
+
+def maze_build(maze, color):
 
     visited = [[False for i in maze[0]] for a in maze]
 
     dirs = [
-    (0, -1, 0, 2),  # up
-    (1, 0, 1, 3),   # right
-    (0, 1, 2, 0),   # down
-    (-1, 0, 3, 1)   # left
+    (0, -1, 0, 2),
+    (1, 0, 1, 3),
+    (0, 1, 2, 0),
+    (-1, 0, 3, 1)
     ]
 
     def check_boundry(x, y):
         return 0 <= x < len(maze) and 0 <= y < len(maze[0])
 
-    def backtrack(x, y):
-        print_maze(maze)
-        # time.sleep(0.05)
+    def remove_wall_between(cell1, cell2, maze):
+        r1 , c1 = cell1
+        r2 , c2 = cell2
+
+        if r1 == r2:
+            if c1 < c2:
+                maze[r1][c1]["walls"] -= 2
+                maze[r2][c2]["walls"] -= 8
+            elif c1 > c2:
+                maze[r1][c1]["walls"] -= 8
+                maze[r2][c2]["walls"] -= 2
+
+        elif c1 == c2:
+            if r1 < r2:
+                maze[r1][c1]["walls"] -= 4
+                maze[r2][c2]["walls"] -= 1
+            elif r1 > r2:
+                maze[r1][c1]["walls"] -= 1
+                maze[r2][c2]["walls"] -= 4
+
+    def backtrack(x, y, color):
+        print_maze(maze, color)
+        time.sleep(0.05)
         os.system("clear")
-        # random.shuffle(dirs)
 
         visited[x][y] = True
 
         for dx, dy, wall, opp_wall  in random.sample(dirs, len(dirs)):
             nx, ny = x + dx, y + dy
             if check_boundry(nx, ny) and not visited[nx][ny]:
-                maze[x][y]["Walls"][wall] = 0
-                maze[nx][ny]["Walls"][opp_wall] = 0
-                backtrack(nx, ny)
-    backtrack(0, 0)
+                remove_wall_between((x,y), (nx, ny), maze)
+                backtrack(nx, ny, color)
+    backtrack(0, 0, color)
     return maze
 
-
+colors ={
+    "BG_BLACK"   : "\033[40m",
+    "BG_RED"     : "\033[41m",
+    "BG_GREEN"   : "\033[42m",
+    "BG_YELLOW"  : "\033[43m",
+    "BG_BLUE"    : "\033[44m",
+    "BG_MAGENTA" : "\033[45m",
+    "BG_CYAN"    : "\033[46m",
+    'BG_WHITE'   : "\033[47m"
+}
 import time
 maze = intitial_map(15, 15)
-maze = maze_build(maze) 
-print_maze(maze)
+maze = maze_build(maze, colors["BG_GREEN"])
+print_maze(maze, colors["BG_GREEN"])
 
-for row in maze:
-    for col in row:
-        col = [str(c) for c in col["Walls"]]
-        a = ''.join(col)
-        print(f"{hex(int(a, 2))[2:]}  ", end='')
-    print()
+
