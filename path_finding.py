@@ -1,7 +1,7 @@
 import prims
 import time
-
-maze = [[{"visited": False, "path": False, "walls": 15} for _ in range(10)] for _ in range(10)]
+from prims import maze
+#maze = [[{"visited": False, "path": False, "walls": 15} for _ in range(10)] for _ in range(10)]
 
 def get_neighbors(maze, coordinates):
     neighbors = []
@@ -58,5 +58,5 @@ def shortest_path(maze, start, end):
 
 maze = prims.prims_algo(maze)
 prims.print_maze(maze, "\033[42m")
-path = shortest_path(maze, (0,0), (9,9))
+path = shortest_path(maze, (0,0), (14,14))
 prims.print_maze(maze, "\033[42m")

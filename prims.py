@@ -1,7 +1,9 @@
 import random
 import time
 
-maze = [[{"visited": False,"path": False ,"walls": 15} for _ in range(15)] for _ in range(10)]
+width = 15
+height = 15
+maze = [[{"visited": False, "protected": False, "path": False ,"walls": 15} for _ in range(width)] for _ in range(height)]
 
 def print_maze(maze, colors):
     width = len(maze[0])
@@ -150,32 +152,48 @@ def print_maze(maze, colors):
         cx += 1
     print("╝")
 
+center_x : int = width // 2
+center_y : int = height // 2
+coordinate = [ [(center_y, center_x - k) for k in range(1, 4) if center_x - k >= 0],
+                [(center_y - k, center_x - 3) for k in range(1, 3) if center_y - k >= 0],
+                [(center_y + k, center_x - 1) for k in range(1, 3) if center_y - k >= 0],
+                [(center_y, center_x + k) for k in range(1, 4) if center_x - k >= 0],
+                [(center_y + k, center_x + 1) for k in range(1, 3) if center_y - k >= 0],
+                [(center_y + 2, center_x + k) for k in range(1, 4) if center_x - k >= 0],
+                [(center_y - k, center_x + 3) for k in range(1, 2) if center_x - k >= 0],
+                [(center_y - 2, center_x + k) for k in range(1, 4) if center_x - k >= 0]
+            ]
+
+for a in coordinate:
+        for b in a:
+            x, y = b
+            maze[x][y]["protected"] = True
 
 def get_neighbors(maze, coordinates):
     neighbors = []
     r, c = coordinates
 
     #upper neighbor
-    if r > 0:
+    if r > 0 and maze[r - 1][c]["protected"] == False:
         neighbors.append((r-1,c))
 
     #down neighbor
-    if r < len(maze) - 1:
+    if r < len(maze) - 1 and maze[r + 1][c]["protected"] == False:
         neighbors.append((r + 1,c))
 
     #left neighbor
-    if c > 0:
-        neighbors.append((r,c - 1))
+    if c > 0 and maze[r][c - 1]["protected"] == False:
+        neighbors.append((r,c - 1) )
 
     #right neighbor
-    if c < len(maze[0]) - 1:
+    if c < len(maze[0]) - 1 and maze[r][c + 1]["protected"] == False:
         neighbors.append((r,c + 1))
 
     return neighbors
 
 def remove_wall_between(cell1, cell2, maze):
-    r1 , c1 = cell1
-    r2 , c2 = cell2
+    r1, c1 = cell1
+    r2, c2 = cell2
 
     if r1 == r2:
         if c1 < c2:
@@ -192,6 +210,13 @@ def remove_wall_between(cell1, cell2, maze):
         elif r1 > r2:
             maze[r1][c1]["walls"] -= 1
             maze[r2][c2]["walls"] -= 4
+
+
+#def make_it_imperfect(maze):
+#    for row in maze:
+#        for cell in row:
+
+
 
 def prims_algo(maze):
     current = (0,0)
@@ -215,7 +240,7 @@ def prims_algo(maze):
             neighbor = random.choice(visited_neighbors)
             remove_wall_between(current, neighbor, maze)
     
-        print_maze(maze, "\033[42m")
+        print_maze(maze,"\033[42m")
         if frontiers:
            print("\33c" , end="")
         time.sleep(0.05)
