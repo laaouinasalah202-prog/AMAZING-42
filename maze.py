@@ -1,5 +1,22 @@
 import random
 import os
+import time
+
+colors ={
+    "red"     : "\033[41m",
+    "green"   : "\033[42m",
+    "yellow"  : "\033[43m",
+    "blue"    : "\033[44m",
+    "magenta" : "\033[45m",
+    "cyan"    : "\033[46m",
+    'white'   : "\033[47m"
+}
+wall_colors = {
+    "yellow" : '\033[93m',
+    "blue" : '\033[94m',
+    "pink" : '\033[95m',
+    "red" : '\033[91m',
+    "green" : '\033[92m'}
 
 def intitial_map(width: int, high: int):
     maze = []
@@ -34,14 +51,14 @@ def print_maze(maze, colors, wall_color):
         while x < width:
             if x < width - 1:
                 if maze[y][x]["walls"] == 15:
-                     print(colors + " \U0001F606 " + "\033[0m"+wall_color+"║", end = "")
+                     print(colors + "    " + "\033[0m"+wall_color+"║", end = "")
                 elif maze[y][x]["walls"] >> 1 & 1 == 1:
                     print(wall_color+"    ║", end = "")
                 else:
                     print("     ", end="")
             x+=1
         if maze[y][width-1]["walls"] == 15:
-            print(colors +" \U0001F92B " + "\033[0m"+wall_color+"║")
+            print(colors +"    " + "\033[0m"+wall_color+"║")
         else:
             print(wall_color+"    ║")
 
@@ -130,21 +147,37 @@ def print_maze(maze, colors, wall_color):
                 print(wall_color+"═", end="")
         cx+=1
     print(wall_color+"╝"+'\033[0m')
-    
+widht = 15
+hight = 15
+maze = intitial_map(widht, hight)
+
+center_x = widht // 2
+center_y = hight // 2
+coordinate = [ [(center_y, center_x - k) for k in range(1, 4) if center_x - k >= 0],
+                [(center_y - k, center_x - 3) for k in range(1, 3) if center_y - k >= 0],
+                [(center_y + k, center_x - 1) for k in range(1, 3) if center_y - k >= 0],
+                [(center_y, center_x + k) for k in range(1, 4) if center_x - k >= 0],
+                [(center_y + k, center_x + 1) for k in range(1, 3) if center_y - k >= 0],
+                [(center_y + 2, center_x + k) for k in range(1, 4) if center_x - k >= 0],
+                [(center_y - k, center_x + 3) for k in range(1, 2) if center_x - k >= 0],
+                [(center_y - 2, center_x + k) for k in range(1, 4) if center_x - k >= 0]
+                ]
 
 def maze_build(maze, color, wall_color):
-
-    visited = [[False for i in maze[0]] for a in maze]
-
     dirs = [
-    (0, -1, 0, 2),
-    (1, 0, 1, 3),
-    (0, 1, 2, 0),
-    (-1, 0, 3, 1)
+    (0, -1),
+    (1, 0),
+    (0, 1),
+    (-1, 0)
     ]
 
     def check_boundry(x, y):
         return 0 <= x < len(maze) and 0 <= y < len(maze[0])
+    
+    visited = [[False for i in maze[0]] for a in maze]
+    for a in coordinate:
+        for x,y in a:
+            visited[x][y] = True
 
     def remove_wall_between(cell1, cell2, maze):
         r1 , c1 = cell1
@@ -172,12 +205,11 @@ def maze_build(maze, color, wall_color):
 
     def backtrack(x, y, color, wall_color):
         print_maze(maze, color, wall_color)
-        time.sleep(0.07)
+        time.sleep(0.04)
         os.system("clear")
-
         visited[x][y] = True
 
-        for dx, dy, wall, opp_wall  in random.sample(dirs, len(dirs)):
+        for dx, dy  in random.sample(dirs, len(dirs)):
             nx, ny = x + dx, y + dy
             if check_boundry(nx, ny) and not visited[nx][ny]:
                 remove_wall_between((x,y), (nx, ny), maze)
@@ -185,41 +217,6 @@ def maze_build(maze, color, wall_color):
     backtrack(0, 0, color, wall_color)
     return maze
 
-colors ={
-    "back"   : "\033[40m",
-    "red"     : "\033[41m",
-    "green"   : "\033[42m",
-    "yellow"  : "\033[43m",
-    "blue"    : "\033[44m",
-    "magenta" : "\033[45m",
-    "cyan"    : "\033[46m",
-    'white'   : "\033[47m"
-}
-wall_colors = {
-    "yellow" : '\033[93m',
-    "blue" : '\033[94m',
-    "pink" : '\033[95m',
-    "red" : '\033[91m',
-    "green" : '\033[92m'}
-wall_color = wall_colors["red"]
-color = colors["green"]
-import time
-widht = 20
-hight = 20
-
-maze = intitial_map(widht, hight)
-maze_build(maze, color, wall_color)
-print_maze(maze, colors["green"], wall_color)
-
-def maze_tohex(maze):
-    f = open("output_maze.txt", 'w')
-
-    for i in maze:
-        for j in i:
-            f.write(str(hex(j["walls"]))[2:])
-        f.write("\n")
-
-maze_tohex(maze)
 def maze_menu(widht, hight):
     print("== A-MAZE-ING ==")
     print("1. Re-generate a new maze")
@@ -230,14 +227,14 @@ def maze_menu(widht, hight):
     choice = input()
     if choice == "1":
         maze = intitial_map(widht, hight)
-        maze = maze_build(maze, colors["green"], wall_color)
-        print_maze(maze, colors["green"], wall_color)
+        maze = maze_build(maze, colors["green"], wall_colors["red"])
+        print_maze(maze, colors["green"], wall_colors["red"])
     elif choice == "2":
         print("show path from entry to exit")
     elif choice == "3":
-        print("Enter cell color: from : back red green yellow lue magenta cyan white")
+        print("Enter cell color from : red green yellow blue magenta cyan white")
         color =input()
-        print("Enter wall color: from : yellow blue pink red green")
+        print("Enter wall color from : yellow blue pink red green")
         wall_color = input()
         for i in colors:
             if i == color:
@@ -245,9 +242,25 @@ def maze_menu(widht, hight):
         for j in wall_colors:
             if j == wall_color:
                 maze = intitial_map(widht, hight)
-                maze = maze_build(maze, c, wall_colors[j])
+                maze_build(maze, c, wall_colors[j])
                 print_maze(maze, c, wall_colors[j])
+                maze_tohex(maze)
+                break
     elif choice == "4":
         exit()
 
-maze_menu(widht, hight)
+def maze_tohex(maze):
+    f = open("output_maze.txt", 'w')
+
+    for i in maze:
+        for j in i:
+            f.write(str(hex(j["walls"]))[2:])
+        f.write("\n")
+
+wall_color = wall_colors["red"]
+color = colors["green"]
+maze_build(maze, color, wall_color)
+print_maze(maze, colors["green"], wall_color)
+maze_tohex(maze)
+while(1):
+    maze_menu(widht, hight)
