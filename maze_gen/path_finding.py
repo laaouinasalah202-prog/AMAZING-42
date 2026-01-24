@@ -1,7 +1,4 @@
-import prims
-import time
-from prims import maze
-#maze = [[{"visited": False, "path": False, "walls": 15} for _ in range(10)] for _ in range(10)]
+from maze import MazeGenerator
 
 def get_neighbors(maze, coordinates):
     neighbors = []
@@ -35,7 +32,7 @@ def shortest_path(maze, start, end):
         current = cells.pop(0)
         if current == end:
             break
-        neighbors = get_neighbors(maze, current)
+        neighbors = get_neighbors(maze.maze, current)
         for neighbor in neighbors:
             if neighbor not in visited:
                 visited.add(neighbor)
@@ -48,15 +45,10 @@ def shortest_path(maze, start, end):
         current = parent[current]
     path.append(start)
     path.reverse()
-
-    for x, y in path:
-        maze[x][y]["path"] = True
-        prims.print_maze(maze, "\033[42m")
-        print("\33c" , end="")
-        time.sleep(0.5)
     return path
 
-maze = prims.prims_algo(maze)
-prims.print_maze(maze, "\033[42m")
-path = shortest_path(maze, (0,0), (14,14))
-prims.print_maze(maze, "\033[42m")
+
+# maze = MazeGenerator(13,13, (0,0), (12,12))
+# prims_algo(maze)
+# path = shortest_path(maze, maze.entry, maze.exit)
+# display_path(maze, path, True)
