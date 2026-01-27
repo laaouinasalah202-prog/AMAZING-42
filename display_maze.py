@@ -16,7 +16,7 @@ wall_colors = {
     "red" : '\033[91m',
     "green" : '\033[92m'}
 
-def print_maze(maze, colors, wall_color):
+def print_maze(maze, colors, wall_color, path=False):
     width = len(maze.maze[0])
     height = len(maze.maze)
     print(wall_color+"╔", end="")
@@ -38,12 +38,12 @@ def print_maze(maze, colors, wall_color):
                 if maze.maze[y][x]["walls"] == 15:
                      print(colors + "    " + "\033[0m"+wall_color+"║", end = "")
                 elif maze.maze[y][x]["walls"] >> 1 & 1 == 1:
-                    if maze.maze[y][x]["path"] == True:
+                    if maze.maze[y][x]["path"] and path:
                         print("  • ║", end="")
                     else:
                         print(wall_color+"    ║", end = "")
                 else:
-                    if maze.maze[y][x]["path"] == True:
+                    if maze.maze[y][x]["path"] and path:
                         print("  •  ", end="")
                     else:
                         print("     ", end="")
@@ -51,7 +51,7 @@ def print_maze(maze, colors, wall_color):
         if maze.maze[y][width-1]["walls"] == 15:
             print(colors +"    " + "\033[0m"+wall_color+"║")
         else:
-            if maze.maze[y][width - 1].get("path", False):
+            if maze.maze[y][width - 1].get("path", False) and path:
                 print("  • ║")
             else:
                 print("    ║")
@@ -75,7 +75,6 @@ def print_maze(maze, colors, wall_color):
                             print(wall_color+"╬", end="")
                     else:
                         print("    ", end="")
-                    # print(" ", end="")
                     if maze.maze[y][x]["walls"] >> 2 & 1 == 1 and maze.maze[y][x + 1]["walls"] >> 2 & 1 == 1:
                         if maze.maze[y][x]["walls"] >> 1 & 1 == 1 and maze.maze[y + 1][x]["walls"] >> 1 & 1 == 0:
                             print(wall_color+"╩", end="")
@@ -142,10 +141,9 @@ def print_maze(maze, colors, wall_color):
         cx+=1
     print(wall_color+"╝"+"\033[0m")
 
-def display_path(maze, path):
-    
-    for x, y in path:
-        maze.maze[x][y]["path"] = True
-        print_maze(maze, "\033[41m","\033[92m")
+def display_path(maze, menu):
+    for x, y in maze.path:
         print("\33c" , end="")
-        time.sleep(0.5)
+        maze.maze[x][y]['path'] = True
+        print_maze(maze, menu.color, menu.wall_color, True)
+        time.sleep(0.3)
