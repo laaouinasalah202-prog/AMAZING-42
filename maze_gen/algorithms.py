@@ -2,29 +2,39 @@ import random
 import time
 from display_maze import print_maze
 
+
 def get_neighbors(maze, coordinates):
+    """
+    Return all valid neighboring cells of a given position in the maze.
+    A neighbor is considered valid if it lies within the maze boundaries
+    and its "protected" flag is set to False.
+    """
     neighbors = []
     r, c = coordinates
 
-    #upper neighbor
-    if r > 0 and maze[r - 1][c]["protected"] == False:
-        neighbors.append((r-1,c))
+    # upper neighbor
+    if r > 0 and not maze[r - 1][c]["protected"]:
+        neighbors.append((r - 1, c))
 
-    #down neighbor
-    if r < len(maze) - 1 and maze[r + 1][c]["protected"] == False:
-        neighbors.append((r + 1,c))
+    # down neighbor
+    if r < len(maze) - 1 and not maze[r + 1][c]["protected"]:
+        neighbors.append((r + 1, c))
 
-    #left neighbor
-    if c > 0 and maze[r][c - 1]["protected"] == False:
-        neighbors.append((r,c - 1) )
+    # left neighbor
+    if c > 0 and not maze[r][c - 1]["protected"]:
+        neighbors.append((r, c - 1))
 
-    #right neighbor
-    if c < len(maze[0]) - 1 and maze[r][c + 1]["protected"] == False:
-        neighbors.append((r,c + 1))
+    # right neighbor
+    if c < len(maze[0]) - 1 and not maze[r][c + 1]["protected"]:
+        neighbors.append((r, c + 1))
 
     return neighbors
 
+
 def remove_wall_between(cell1, cell2, maze):
+    """
+    remove the wall according to its position
+    """
     r1, c1 = cell1
     r2, c2 = cell2
 
@@ -46,35 +56,41 @@ def remove_wall_between(cell1, cell2, maze):
 
 
 def backtrack_algo(maze, color, wall_color, display=False):
+    """
+    Generate a maze using the recursive backtracking (DFS) algorithm.
+
+    Optionally displays the maze generation process step by step.
+    """
     dirs = [
-    (0, -1),
-    (1, 0),
-    (0, 1),
-    (-1, 0)
+        (0, -1),
+        (1, 0),
+        (0, 1),
+        (-1, 0)
     ]
     coordinate = maze.set_42(maze.maze)
+
     def check_boundry(x, y):
         return 0 <= x < len(maze.maze) and 0 <= y < len(maze.maze[0])
-    
+
     visited = [[False for i in maze.maze[0]] for a in maze.maze]
     for a in coordinate:
-        for x,y in a:
+        for x, y in a:
             visited[x][y] = True
 
     def remove_wall_between(cell1, cell2, maze):
-        r1 , c1 = cell1
-        r2 , c2 = cell2
+        r1, c1 = cell1
+        r2, c2 = cell2
 
         r = 2
-        l = 8
+        le = 8
         up = 1
         dn = 4
         if r1 == r2:
             if c1 < c2:
                 maze.maze[r1][c1]["walls"] -= r
-                maze.maze[r2][c2]["walls"] -= l
+                maze.maze[r2][c2]["walls"] -= le
             elif c1 > c2:
-                maze.maze[r1][c1]["walls"] -= l
+                maze.maze[r1][c1]["walls"] -= le
                 maze.maze[r2][c2]["walls"] -= r
 
         elif c1 == c2:
@@ -89,18 +105,25 @@ def backtrack_algo(maze, color, wall_color, display=False):
         if display:
             print_maze(maze, color, wall_color)
             time.sleep(0.04)
-            print("\33c" , end="")
+            print("\33c", end="")
         visited[x][y] = True
 
-        for dx, dy  in random.sample(dirs, len(dirs)):
+        for dx, dy in random.sample(dirs, len(dirs)):
             nx, ny = x + dx, y + dy
             if check_boundry(nx, ny) and not visited[nx][ny]:
-                remove_wall_between((x,y), (nx, ny), maze)
+                remove_wall_between((x, y), (nx, ny), maze)
                 backtrack(nx, ny, color, wall_color, display)
     backtrack(0, 0, color, wall_color, display)
 
-def prims_algo(maze,color, wall_color, display):
-    current = (0,0)
+
+def prims_algo(maze, color, wall_color, display):
+    """
+    Generate a maze using Prim's algorithm.
+
+    Expands the maze by randomly connecting frontier cells to
+    already visited cells, optionally displaying each step.
+    """
+    current = (0, 0)
     visited = {current}
     frontiers = []
     frontiers.extend(get_neighbors(maze.maze, current))
@@ -120,35 +143,47 @@ def prims_algo(maze,color, wall_color, display):
         if visited_neighbors:
             neighbor = random.choice(visited_neighbors)
             remove_wall_between(current, neighbor, maze.maze)
-        
+
         print_maze(maze, color, wall_color)
-        print("\33c" , end="")
+        print("\33c", end="")
         time.sleep(0.05)
     return maze
 
+
 def only_open_neighbors(maze, coordinates):
+    """
+    Return neighboring cells that are reachable (no wall in between).
+
+    Checks the wall bitmask of the current cell to determine open paths.
+    """
     neighbors = []
     r, c = coordinates
-    #upper neighbor
+    # upper neighbor
     if ((maze[r][c]["walls"] >> 0) & 1) == 0 and r > 0:
-        neighbors.append((r-1,c))
+        neighbors.append((r-1, c))
 
-    #down neighbor
+    # down neighbor
     if ((maze[r][c]["walls"] >> 2) & 1) == 0 and r < len(maze) - 1:
-        neighbors.append((r + 1,c))
-    
-    #left neighbor
+        neighbors.append((r + 1, c))
+
+    # left neighbor
     if ((maze[r][c]["walls"] >> 3) & 1) == 0 and c > 0:
-        neighbors.append((r,c - 1))
-    
-    #right neighbor
+        neighbors.append((r, c - 1))
+
+    # right neighbor
     if ((maze[r][c]["walls"] >> 1) & 1) == 0 and c < len(maze[0]) - 1:
-        neighbors.append((r,c + 1))
-        
+        neighbors.append((r, c + 1))
+
     return neighbors
-    
+
+
 def shortest_path(maze):
-    x,y = maze._entry
+    """
+    Compute the shortest path from entry to exit in the maze using BFS.
+
+    Stores the resulting path in `maze.path`.
+    """
+    x, y = maze._entry
     cells = [(x, y)]
     visited = {maze._entry}
     parent = {}
@@ -167,7 +202,7 @@ def shortest_path(maze):
 
     current = maze._exit_p
     while current != maze._entry:
-        x,y = current
+        x, y = current
         path.append(current)
         current = parent[current]
     path.append(maze._entry)

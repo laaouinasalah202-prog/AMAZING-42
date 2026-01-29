@@ -1,10 +1,22 @@
 from maze_gen import MazeGenerator, shortest_path
 from parssing import parssing
-import sys, random
+import sys
+import random
 from menu import MENU, maze_menu
 
 
 if __name__ == "__main__":
+    """
+    Main script to generate and interact with a maze.
+
+    Usage:
+        python3 a_maze_ing.py config.txt
+
+    Reads maze configuration from a file, creates the maze
+    ,optionally seeds randomness,generates the maze using a selected algorithm,
+    computes the shortest path, and launches an interactive menu for the user.
+    """
+
     if len(sys.argv) == 1:
         print("Usage: python3 a_maze_ing.py config.txt")
         exit(1)
