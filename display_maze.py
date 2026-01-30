@@ -81,16 +81,16 @@ def print_maze(maze, colors, wall_color, path=False):
                             print(wall_color+"╬", end="")
                     else:
                         print("    ", end="")
-                    if all(maze.maze[y][x]["walls"] >> 2 & 1 == 1,
-                            maze.maze[y][x + 1]["walls"] >> 2 & 1 == 1):
-                        if all(maze.maze[y][x]["walls"] >> 1 & 1 == 1,
-                               maze.maze[y + 1][x]["walls"] >> 1 & 1 == 0):
+                    if all((maze.maze[y][x]["walls"] >> 2 & 1 == 1,
+                            maze.maze[y][x + 1]["walls"] >> 2 & 1 == 1)):
+                        if all((maze.maze[y][x]["walls"] >> 1 & 1 == 1,
+                               maze.maze[y + 1][x]["walls"] >> 1 & 1 == 0)):
                             print(wall_color+"╩", end="")
-                        if all(maze.maze[y + 1][x]["walls"] >> 1 & 1 == 0,
-                               maze.maze[y][x]["walls"] >> 1 & 1 == 0):
+                        if all((maze.maze[y + 1][x]["walls"] >> 1 & 1 == 0,
+                               maze.maze[y][x]["walls"] >> 1 & 1 == 0)):
                             print(wall_color+"═", end="")
-                        if all(maze.maze[y + 1][x]["walls"] >> 1 & 1 == 1,
-                               maze.maze[y][x]["walls"] >> 1 & 1 == 0):
+                        if all((maze.maze[y + 1][x]["walls"] >> 1 & 1 == 1,
+                               maze.maze[y][x]["walls"] >> 1 & 1 == 0)):
                             print(wall_color+"╦", end="")
                     if maze.maze[y][x + 1]["walls"] >> 2 & 1 == 0:
                         if all((maze.maze[y][x]["walls"] >> 2 & 1 == 0,
@@ -123,19 +123,19 @@ def print_maze(maze, colors, wall_color, path=False):
                                 maze.maze[y + 1][x]["walls"] >> 1 & 1 == 0,
                                 maze.maze[y][x]["walls"] >> 1 & 1 == 1,)):
                             print(wall_color+"╝", end="")
-                    if all(maze.maze[y][x]["walls"] >> 2 & 1 == 0,
-                           maze.maze[y][x + 1]["walls"] >> 2 & 1 == 1):
-                        if all(maze.maze[y + 1][x]["walls"] >> 1 & 1 == 1,
-                               maze.maze[y][x]["walls"] >> 1 & 1 == 0):
+                    if all((maze.maze[y][x]["walls"] >> 2 & 1 == 0,
+                           maze.maze[y][x + 1]["walls"] >> 2 & 1 == 1)):
+                        if all((maze.maze[y + 1][x]["walls"] >> 1 & 1 == 1,
+                               maze.maze[y][x]["walls"] >> 1 & 1 == 0)):
                             print(wall_color+"╔", end="")
-                        if all(maze.maze[y + 1][x]["walls"] >> 1 & 1 == 0,
-                               maze.maze[y][x]["walls"] >> 1 & 1 == 1):
+                        if all((maze.maze[y + 1][x]["walls"] >> 1 & 1 == 0,
+                               maze.maze[y][x]["walls"] >> 1 & 1 == 1)):
                             print(wall_color+"╚", end="")
-                        if all(maze.maze[y + 1][x]["walls"] >> 1 & 1 == 0,
-                               maze.maze[y][x]["walls"] >> 1 & 1 == 0):
+                        if all((maze.maze[y + 1][x]["walls"] >> 1 & 1 == 0,
+                               maze.maze[y][x]["walls"] >> 1 & 1 == 0)):
                             print(" ", end="")
-                        if all(maze.maze[y + 1][x]["walls"] >> 1 & 1 == 1,
-                               maze.maze[y][x]["walls"] >> 1 & 1 == 1):
+                        if all((maze.maze[y + 1][x]["walls"] >> 1 & 1 == 1,
+                               maze.maze[y][x]["walls"] >> 1 & 1 == 1)):
                             print(wall_color+"╠", end="")
             x += 1
         if y < height - 1:

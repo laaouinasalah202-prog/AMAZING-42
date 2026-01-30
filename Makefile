@@ -11,7 +11,7 @@ install:
 
 run:
 	@echo "Running the maze project..."
-	$(PYTHON) $(MAIN)
+	$(PYTHON) $(MAIN) config.txt
 
 debug:
 	@echo "Running the maze project in debug mode..."
