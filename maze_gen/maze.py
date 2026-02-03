@@ -60,12 +60,16 @@ class MazeGenerator:
         Raises a ValueError if the width is not between 10 and 30.
         Returns the width if valid.
         """
-        if width < 10:
-            raise ValueError(f"Error: Width {width} is below minimum 10")
-        elif width > 30:
-            raise ValueError(f"Error: width {width} exceeds maximum 30")
-        else:
-            return width
+        try:
+            if width < 10:
+                raise ValueError(f"Error: Width {width} is below minimum 10")
+            elif width > 30:
+                raise ValueError(f"Error: width {width} exceeds maximum 30")
+            else:
+                return width
+        except ValueError as e:
+            print(f"{e}")
+            exit(0)
 
     def height_setter(self, height):
         """

@@ -1,7 +1,7 @@
-WIDTH = 11
-HEIGHT= 11
+WIDTH = 10
+HEIGHT= 10
 ENTRY= 0,0
-EXIT= 10, 10
+EXIT= 9, 9
 OUTPUT_FILE=maze.txt
 PERFECT=True
-SEED=adada
+#SEED=adada
