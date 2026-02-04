@@ -11,6 +11,7 @@ make debug : run the maze project in debug mode
 🔍 Resources:
 
 Algorithm-related resources:
+
 https://en.wikipedia.org/wiki/Maze_generation_algorithm
 https://www.baeldung.com/cs/maze-generation
 https://medium.com/@nacerkroudir/randomized-depth-first-search-algorithm-for-maze-generation-fb2d83702742
@@ -18,6 +19,7 @@ https://www.youtube.com/watch?v=PMMc4VsIacU
 https://weblog.jamisbuck.org/2010/12/27/maze-generation-recursive-backtracking
 
 UI-related resources:
+
 https://www.mazegenerator.net/
 https://en.wikipedia.org/wiki/Box-drawing_characters
 https://math.stackexchange.com/questions/3116460/how-to-make-a-5-cell-shaped-maze
