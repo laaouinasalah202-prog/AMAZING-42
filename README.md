@@ -1,4 +1,4 @@
-*This project has been created as part of the 42 curriculum by <slaaouin>, <lozboualamin2>.*
+*This project has been created as part of the 42 curriculum by slaaouin, lozboualamin2.*
 
 Description:
 A-maze-ing is an algorithm-focused project that allows users to create and explore mazes using different algorithms. The project involves implementing maze generation and pathfinding algorithms while meeting specific requirements, such as displaying the maze visually, finding the shortest path, and providing an interactive menu for easy navigation.
