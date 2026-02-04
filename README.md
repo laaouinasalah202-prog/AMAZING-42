@@ -4,8 +4,11 @@ Description:
 A-maze-ing is an algorithm-focused project that allows users to create and explore mazes using different algorithms. The project involves implementing maze generation and pathfinding algorithms while meeting specific requirements, such as displaying the maze visually, finding the shortest path, and providing an interactive menu for easy navigation.
 
 ✨ Instructions:
+
 make install : install project dependencies
+
 make run : run the maze project
+
 make debug : run the maze project in debug mode
 
 🔍 Resources:
