@@ -1,5 +1,3 @@
-import random
-
 class MazeGenerator:
     def __init__(self, width, height, entry, ex, out_file, perfect, seed):
         self._width = self.width_setter(width)

@@ -1,7 +1,8 @@
-from maze_gen import MazeGenerator, shortest_path, print_maze
+from maze_gen import MazeGenerator, shortest_path
 from parssing import parssing
 import sys
 from menu import MENU, maze_menu
+from display_maze import print_maze
 
 if __name__ == "__main__":
     """
@@ -39,7 +40,7 @@ if __name__ == "__main__":
         print(f"Error: {e}")
         exit(0)
     try:
-        menu = MENU(False, "\033[95m", "\033[44m", "prims")
+        menu = MENU(False, "\033[94m", "\033[47m", "prims")
         maze = MazeGenerator(width, height, entry, exit_p, out_file, perfect, seed)
         menu.generate_maze(maze)
         print("\33c", end="")

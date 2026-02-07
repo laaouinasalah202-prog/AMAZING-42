@@ -1,6 +1,5 @@
 import random
 import time
-from ..display_maze import print_maze
 
 def get_neighbors(maze, coordinates):
     """
@@ -54,7 +53,7 @@ def remove_wall_between(cell1, cell2, maze):
             maze[r2][c2]["walls"] -= 4
 
 
-def backtrack_algo(maze, color, wall_color):
+def backtrack_algo(maze, color, wall_color, print_maze):
     """
     Generate a maze using the recursive backtracking (DFS) algorithm.
 
@@ -115,7 +114,7 @@ def backtrack_algo(maze, color, wall_color):
     backtrack(0, 0, color, wall_color)
 
 
-def prims_algo(maze, color, wall_color):
+def prims_algo(maze, color, wall_color, print_maze):
     """
     Generate a maze using Prim's algorithm.
 

@@ -51,10 +51,9 @@ class MENU:
         and prints the maze.
         """
         if self.algo_name == "prims":
-            prims_algo(maze, self.color, self.wall_color)
+            prims_algo(maze, self.color, self.wall_color, print_maze)
         elif self.algo_name == "backtrack":
-            backtrack_algo(maze, self.color, self.wall_color)
-        print_maze(maze, self.color, self.wall_color)
+            backtrack_algo(maze, self.color, self.wall_color, print_maze)
         if maze._perfect == False:
             imperfect_maze(maze)
             print("\33c", end="")
