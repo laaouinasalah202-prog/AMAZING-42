@@ -1,7 +1,6 @@
 import random
 import time
-from display_maze import print_maze
-
+from ..display_maze import print_maze
 
 def get_neighbors(maze, coordinates):
     """
@@ -55,7 +54,7 @@ def remove_wall_between(cell1, cell2, maze):
             maze[r2][c2]["walls"] -= 4
 
 
-def backtrack_algo(maze, color, wall_color, display=False):
+def backtrack_algo(maze, color, wall_color):
     """
     Generate a maze using the recursive backtracking (DFS) algorithm.
 
@@ -68,7 +67,9 @@ def backtrack_algo(maze, color, wall_color, display=False):
         (-1, 0)
     ]
     coordinate = maze.set_42(maze.maze)
-
+    
+    if maze.seed != None:
+        random.seed(maze.seed)
     def check_boundry(x, y):
         return 0 <= x < len(maze.maze) and 0 <= y < len(maze.maze[0])
 
@@ -101,22 +102,20 @@ def backtrack_algo(maze, color, wall_color, display=False):
                 maze.maze[r1][c1]["walls"] -= up
                 maze.maze[r2][c2]["walls"] -= dn
 
-    def backtrack(x, y, color, wall_color, display):
-        if display:
-            print_maze(maze, color, wall_color)
-            time.sleep(0.04)
-            print("\33c", end="")
+    def backtrack(x, y, color, wall_color):
+        print_maze(maze, color, wall_color)
+        time.sleep(0.01)
         visited[x][y] = True
 
         for dx, dy in random.sample(dirs, len(dirs)):
             nx, ny = x + dx, y + dy
             if check_boundry(nx, ny) and not visited[nx][ny]:
                 remove_wall_between((x, y), (nx, ny), maze)
-                backtrack(nx, ny, color, wall_color, display)
-    backtrack(0, 0, color, wall_color, display)
+                backtrack(nx, ny, color, wall_color)
+    backtrack(0, 0, color, wall_color)
 
 
-def prims_algo(maze, color, wall_color, display):
+def prims_algo(maze, color, wall_color):
     """
     Generate a maze using Prim's algorithm.
 
@@ -128,6 +127,8 @@ def prims_algo(maze, color, wall_color, display):
     frontiers = []
     frontiers.extend(get_neighbors(maze.maze, current))
 
+    if maze.seed != None:
+        random.seed(maze.seed)
     while frontiers:
         current = random.choice(frontiers)
         visited.add(current)
@@ -145,8 +146,7 @@ def prims_algo(maze, color, wall_color, display):
             remove_wall_between(current, neighbor, maze.maze)
 
         print_maze(maze, color, wall_color)
-        print("\33c", end="")
-        time.sleep(0.05)
+        time.sleep(0.01)
     return maze
 
 
@@ -208,3 +208,60 @@ def shortest_path(maze):
     path.append(maze._entry)
     path.reverse()
     maze.path = path
+
+def count_walls(n):
+    i = 0
+    c = 0
+    while i < 4:
+        if (n >> i & 1):
+            c += 1
+        i += 1
+    return c
+
+def only_close_neighbors(maze, coordinates):
+    """
+    Return neighboring cells that are reachable (no wall in between).
+
+    Checks the wall bitmask of the current cell to determine open paths.
+    """
+    neighbors = []
+    r, c = coordinates
+    # upper neighbor
+    if ((maze[r][c]["walls"] >> 0) & 1) == 1 and r > 0:
+        if maze[r - 1][c]["protected"] == False and count_walls(maze[r - 1][c]["walls"]) > 2:
+            neighbors.append((r-1, c))
+
+    # down neighbor
+    if ((maze[r][c]["walls"] >> 2) & 1) == 1 and r < len(maze) - 1:
+        if maze[r + 1][c]["protected"] == False and count_walls(maze[r + 1][c]["walls"]) > 2:
+            neighbors.append((r + 1, c))
+
+    # left neighbor
+    if ((maze[r][c]["walls"] >> 3) & 1) == 1 and c > 0:
+        if maze[r][c - 1]["protected"] == False and count_walls(maze[r][c - 1]["walls"]) > 2:
+            neighbors.append((r, c - 1))
+
+    # right neighbor
+    if ((maze[r][c]["walls"] >> 1) & 1) == 1 and c < len(maze[0]) - 1:
+        if maze[r][c + 1]["protected"] == False and count_walls(maze[r][c + 1]["walls"]) > 2:
+            neighbors.append((r, c + 1))
+
+    return neighbors
+
+def break_cell(maze, cell, coordinates):
+    if count_walls(cell["walls"] < 3) or cell["protected"]:
+        return
+
+    neighbors = only_close_neighbors(maze.maze, coordinates)
+    if neighbors:
+        remove_wall_between(coordinates, random.choice(neighbors), maze.maze)
+
+def imperfect_maze(maze):
+    r = 0
+    for row in maze.maze:
+        c = 0
+        for cell in row:
+            if random.random() > 0.6:
+                break_cell(maze, cell, (r, c))
+            c += 1
+        r += 1

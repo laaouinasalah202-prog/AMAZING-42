@@ -1,6 +1,6 @@
 from maze_gen import prims_algo, backtrack_algo, shortest_path
 from display_maze import print_maze, display_path, colors, wall_colors
-
+from maze_gen.algorithms import imperfect_maze
 
 class MENU:
     """
@@ -51,10 +51,14 @@ class MENU:
         and prints the maze.
         """
         if self.algo_name == "prims":
-            prims_algo(maze, self.color, self.wall_color, True)
+            prims_algo(maze, self.color, self.wall_color)
         elif self.algo_name == "backtrack":
-            backtrack_algo(maze, self.color, self.wall_color, True)
+            backtrack_algo(maze, self.color, self.wall_color)
         print_maze(maze, self.color, self.wall_color)
+        if maze._perfect == False:
+            imperfect_maze(maze)
+            print("\33c", end="")
+            print_maze(maze, self.color, self.wall_color)
 
 
 def maze_menu(maze, menu):
@@ -92,7 +96,7 @@ def maze_menu(maze, menu):
             menu.path = True
             print("\33c", end="")
             if MENU.first_gen:
-                display_path(maze, menu)
+                display_path(maze, menu.color, menu.wall_color)
             else:
                 print_maze(maze, menu.color, menu.wall_color, True)
             MENU.first_gen = False

@@ -1,11 +1,14 @@
+import random
+
 class MazeGenerator:
-    def __init__(self, width, height, entry, ex, out_file, perfect):
+    def __init__(self, width, height, entry, ex, out_file, perfect, seed):
         self._width = self.width_setter(width)
         self._height = self.height_setter(height)
         self._entry = self.entry_setter(entry)
         self._exit_p = self.exit_setter(ex)
         self._out_file = out_file
         self._perfect = perfect
+        self.seed = seed
         self.maze = self.creat_maze()
         self.path = []
 
@@ -51,6 +54,12 @@ class MazeGenerator:
             for _ in range(self._height)
             ]
         self.set_42(maze)
+        e_r, e_c = self._entry
+        x_r, x_c = self._exit_p
+        if maze[e_r][e_c]["protected"]:
+            raise ValueError("Entry should be out of 42 pattern")
+        elif maze[x_r][x_c]["protected"]:
+            raise ValueError("Exit should be out of 42 pattern")
         return maze
 
     def width_setter(self, width):
@@ -63,8 +72,6 @@ class MazeGenerator:
         try:
             if width < 10:
                 raise ValueError(f"Error: Width {width} is below minimum 10")
-            elif width > 30:
-                raise ValueError(f"Error: width {width} exceeds maximum 30")
             else:
                 return width
         except ValueError as e:
@@ -80,8 +87,6 @@ class MazeGenerator:
         """
         if height < 8:
             raise ValueError(f"Error: Height {height} is below minimum 10")
-        elif height > 25:
-            raise ValueError(f"Error: Height {height} exceeds maximum 25")
         else:
             return height
 
@@ -92,11 +97,9 @@ class MazeGenerator:
         Raises a ValueError if the entry coordinates are out of maze bounds.
         Returns the entry coordinates if valid.
         """
-        x, y = entry
+        x, _ = entry
         if x < 0 or x > self._width - 1:
-            raise ValueError(f"set ({entry}) out of range")
-        elif y < 0 or y > self._height - 1:
-            raise ValueError(f"set ({entry}) out of range")
+            raise ValueError(f"set {entry} out of range")
         else:
             return entry
 
@@ -111,9 +114,9 @@ class MazeGenerator:
         if exit_p == self._entry:
             raise ValueError("Error: Starting cell and ending cell overlap")
         if x < 0 or x > self._width - 1:
-            raise ValueError(f"set ({exit_p}) out of range")
+            raise ValueError(f"set {exit_p} out of range")
         elif y < 0 or y > self._height - 1:
-            raise ValueError(f"set ({exit_p}) out of range")
+            raise ValueError(f"set {exit_p} out of range")
         else:
             return exit_p
 
@@ -123,9 +126,33 @@ class MazeGenerator:
         Writes each row of the maze as a line
         of hex strings to `self._out_file`.
         """
+        path = ""
+        i = 0
+        while i < len(self.path) - 1:
+            r , c = self.path[i]
+            r_n , c_n = self.path[i + 1]
+
+            if c < c_n:
+                path += "E"
+            elif c > c_n:
+                path += "W"
+            elif r < r_n:
+                path += "S"
+            elif r > r_n:
+                path += "N"
+            i += 1
+
         with open(self._out_file, 'w') as f:
             for i in self.maze:
                 for j in i:
                     f.write(str(hex(j["walls"]))[2:])
                 f.write("\n")
-            print("\n")
+            f.write("\n")
+            entry = str(self._entry).strip('()')
+            f.write(entry.replace(" ", ""))
+            f.write("\n")
+            exit_p = str(self._exit_p).strip('()')
+            f.write(exit_p.replace(" ", ""))
+            f.write("\n")
+            f.write(path)
+            f.write("\n")

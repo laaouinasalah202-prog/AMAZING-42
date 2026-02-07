@@ -23,6 +23,8 @@ def print_maze(maze, colors, wall_color, path=False):
     Displays walls, open spaces, and optionally the solution path.
     Colors for walls and cells can be customized with `colors`&`wall_color`.
     """
+    print("\033[H", end="")
+    print("\033[?25l")
     width = len(maze.maze[0])
     height = len(maze.maze)
     print(wall_color+"╔", end="")
@@ -81,6 +83,11 @@ def print_maze(maze, colors, wall_color, path=False):
                             print(wall_color+"╬", end="")
                     else:
                         print("    ", end="")
+                    if maze.maze[y][x + 1]["walls"] >> 2 & 1 == 0:
+                        if all((maze.maze[y][x]["walls"] >> 2 & 1 == 0,
+                            maze.maze[y + 1][x]["walls"] >> 1 & 1 == 0,
+                            maze.maze[y][x]["walls"] >> 1 & 1 == 0)):
+                            print(" ", end="")
                     if all((maze.maze[y][x]["walls"] >> 2 & 1 == 1,
                             maze.maze[y][x + 1]["walls"] >> 2 & 1 == 1)):
                         if all((maze.maze[y][x]["walls"] >> 1 & 1 == 1,
@@ -157,7 +164,7 @@ def print_maze(maze, colors, wall_color, path=False):
     print(wall_color+"╝"+"\033[0m")
 
 
-def display_path(maze, menu):
+def display_path(maze, color, wall_color):
     """
     Animate the maze solution path step by step in the console.
 
@@ -166,5 +173,5 @@ def display_path(maze, menu):
     for x, y in maze.path:
         print("\33c", end="")
         maze.maze[x][y]['path'] = True
-        print_maze(maze, menu.color, menu.wall_color, True)
-        time.sleep(0.3)
+        print_maze(maze, color, wall_color, True)
+        time.sleep(0.05)

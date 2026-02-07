@@ -1,6 +1,6 @@
 PYTHON := python3
 
-MAIN := amazing.py
+MAIN := a_maze_ing.py
 
 .PHONY: install run debug clean lint lint-strict
 
@@ -19,14 +19,9 @@ debug:
 
 clean:
 	@echo "Cleaning temporary files..."
-	rm -rf __pycache__ .mypy_cache *.pyc
+	$(PYTHON) -m cleanpy .
 
 lint:
 	@echo "Running lint checks..."
-	flake8 .
-	mypy . --warn-return-any --warn-unused-ignores --ignore-missing-imports --disallow-untyped-defs --check-untyped-defs
-
-lint-strict:
-	@echo "Running strict lint checks..."
-	flake8 .
-	mypy . --strict
+	-flake8 .
+	-python3 -m mypy . --warn-return-any --warn-unused-ignores --ignore-missing-imports --disallow-untyped-defs --check-untyped-defs

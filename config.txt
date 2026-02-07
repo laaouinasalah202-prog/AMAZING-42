@@ -1,7 +1,20 @@
-WIDTH = 10
-HEIGHT= 10
+#WIDTH – the width of the maze
+WIDTH = 40
+
+#HEIGHT – the he.ight of the maze
+HEIGHT = 40
+
+#ENTRY – starting point of the maze
 ENTRY= 0,0
-EXIT= 9, 9
+
+#EXIT – exit point of the maze
+exit= 9,9
+
+#OUTPUT_FILE – file containing the maze in hexadecimal
 OUTPUT_FILE=maze.txt
-PERFECT=True
-#SEED=adada
+
+#PERFECT – this is a flag. If true, there will be a single path between entry and exit. Otherwise, there will be two paths.
+Perfect=True
+
+#SEED – the initial value used to initialize a pseudo-random number generator for maze generation
+#SEED=3232

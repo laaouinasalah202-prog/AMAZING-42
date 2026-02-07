@@ -1,4 +1,4 @@
-*This project has been created as part of the 42 curriculum by slaaouin, lozboualamin.*
+*This project has been created as part of the 42 curriculum by slaaouin, zboualam.*
 
 Description:
 A-maze-ing is an algorithm-focused project that allows users to create and explore mazes using different algorithms. The project involves implementing maze generation and pathfinding algorithms while meeting specific requirements, such as displaying the maze visually, finding the shortest path, and providing an interactive menu for easy navigation.
@@ -93,7 +93,7 @@ BFS was used specifically for finding the shortest path in the maze. It guarante
 
 🫸💥🫷 team and project management
 
-My peer, <lozboualamin2>, focused on the algorithm side and finding the shortest path. He implemented the maze generation using Prim’s algorithm and also developed the shortest path logic. Additionally, he was responsible for parsing the maze information from the configuration file and designing the overall structure of the project.
+My peer, <zboualam>, focused on the algorithm side and finding the shortest path. He implemented the maze generation using Prim’s algorithm and also developed the shortest path logic. Additionally, he was responsible for parsing the maze information from the configuration file and designing the overall structure of the project.
 
 My part focused on the maze display and maze generation as well. Initially, I was unsure how to display the maze, but with the help of ASCII art, I was able to create a clear and visually appealing maze display using ASCII characters. The algorithm I used for maze generation was backtracking DFS. I was also responsible for creating the menu system for this project.
 

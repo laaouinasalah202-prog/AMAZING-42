@@ -20,7 +20,7 @@ def change_value(config_dic: dict):
         config_dic["HEIGHT"] = int(config_dic["HEIGHT"])
     except ValueError as e:
         print(f"Error: {e}")
-        exit(1)
+        exit(0)
     try:
         exit_p = [int(i) for i in config_dic["EXIT"].split(',')]
         entry = [int(i) for i in config_dic["ENTRY"].split(',')]
@@ -32,7 +32,7 @@ def change_value(config_dic: dict):
         config_dic["EXIT"] = tuple(exit_p)
     except ValueError as e:
         print(f"{e}")
-        exit(1)
+        exit(0)
     try:
         if config_dic["PERFECT"].lower() == "true":
             config_dic["PERFECT"] = True
@@ -60,8 +60,8 @@ def parssing(file_path) -> dict:
         fd = open(file_path)
         with open(file_path) as fd:
             for line in fd:
-                if "output_file" not in line.lower():
-                    line = line.upper()
+                # if "output_file" not in line.lower():
+                #     line = line.upper()
                 if line == '\n':
                     continue
                 if line.startswith("#") is False:
@@ -70,7 +70,7 @@ def parssing(file_path) -> dict:
                         raise SyntaxError(
                             f"Error: Invalid config format - '{temp[0]}'"
                             )
-                    config.update({temp[0]: temp[1]})
+                    config.update({temp[0].upper(): temp[1]})
 
             for req in requirements:
                 if req not in config.keys():
@@ -79,4 +79,4 @@ def parssing(file_path) -> dict:
             return config
     except (FileError, FileNotFoundError) as e:
         print(f"{e}")
-        exit(1)
+        exit(0)
