@@ -6,7 +6,7 @@ class SyntaxError(FileError):
     pass
 
 
-def change_value(config_dic: dict):
+def change_value(config_dic: dict) -> None:
     """
     Convert configuration values to appropriate types.
 
@@ -44,7 +44,7 @@ def change_value(config_dic: dict):
         print(f"{e}")
 
 
-def parssing(file_path) -> dict:
+def parssing(file_path: str) -> dict:
     """
     Parse a maze configuration file and return settings as a dictionary.
 

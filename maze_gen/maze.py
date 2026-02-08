@@ -1,24 +1,36 @@
+from typing import List, Tuple, Any
+
+
 class MazeGenerator:
-    def __init__(self, width, height, entry, ex, out_file, perfect, seed):
-        self._width = self.width_setter(width)
-        self._height = self.height_setter(height)
-        self._entry = self.entry_setter(entry)
-        self._exit_p = self.exit_setter(ex)
-        self._out_file = out_file
-        self._perfect = perfect
-        self.seed = seed
-        self.maze = self.creat_maze()
-        self.path = []
+    def __init__(self, width: int, height: int,
+                 entry: Tuple, ex: Tuple,
+                 out_file: str, perfect: bool, seed: Any
+                 ) -> None:
+        self._width: int = self.width_setter(width)
+        self._height: int = self.height_setter(height)
+        self._entry: Tuple[int, int] = self.entry_setter(entry)
+        self._exit_p: Tuple[int, int] = self.exit_setter(ex)
+        self._out_file: str = out_file
+        self._perfect: bool = perfect
+        self.seed: Any = seed
+        self.maze: List = self.creat_maze()
+        self.path: List = []
 
-    def set_42(self, maze):
-        """
-        Mark a specific 42 pattern of cells near the maze center as protected.
+    def set_42(
+            self, maze: List
+            ) -> List:
+        """Mark a specific 42 pattern of cells
+        near the maze center as protected.
 
-        Returns the list of coordinates that were marked.
+        Args:
+            maze: A 2D list of cell dictionaries representing the maze grid.
+
+        Returns:
+            A list of coordinates that were marked as protected.
         """
-        center_x = self._width // 2
-        center_y = self._height // 2
-        coordinate = [
+        center_x: int = self._width // 2
+        center_y: int = self._height // 2
+        coordinate: List = [
                     [(center_y, center_x - k) for k in range(1, 4)
                         if center_x - k >= 0],
                     [(center_y - k, center_x - 3) for k in range(1, 3)
@@ -41,12 +53,17 @@ class MazeGenerator:
                 maze[x][y]["protected"] = True
         return coordinate
 
-    def creat_maze(self):
+    def creat_maze(self) -> List:
+        """Create a new maze grid with all cells initialized.
+
+        Returns:
+            The maze as a 2D list of cell dictionaries.
+
+        Raises:
+            ValueError: If entry or exit points
+            are in the protected 42 pattern.
         """
-        Create a new maze grid with all cells initialized.
-        Returns the maze as a 2D list of cell dictionaries.
-        """
-        maze = [[
+        maze: List = [[
             {"visited": False, "protected": False, "path": False, "walls": 15}
             for _ in range(self._width)]
             for _ in range(self._height)
@@ -60,12 +77,17 @@ class MazeGenerator:
             raise ValueError("Exit should be out of 42 pattern")
         return maze
 
-    def width_setter(self, width):
-        """
-        Validate and set the maze width.
+    def width_setter(self, width: int) -> int:
+        """Validate and set the maze width.
 
-        Raises a ValueError if the width is not between 10 and 30.
-        Returns the width if valid.
+        Args:
+            width: The desired width of the maze.
+
+        Returns:
+            The width if valid.
+
+        Raises:
+            ValueError: If the width is below minimum 10.
         """
         try:
             if width < 10:
@@ -76,10 +98,9 @@ class MazeGenerator:
             print(f"{e}")
             exit(0)
 
-    def height_setter(self, height):
+    def height_setter(self, height: int) -> int:
         """
         Validate and set the maze height.
-
         Raises a ValueError if the height is not between 8 and 25.
         Returns the height if valid.
         """
@@ -88,12 +109,18 @@ class MazeGenerator:
         else:
             return height
 
-    def entry_setter(self, entry):
-        """
-        Validate and set the maze entry point.
+    def entry_setter(self, entry: Tuple[int, int]) -> Tuple[int, int]:
+        """Validate and set the maze exit point.
 
-        Raises a ValueError if the entry coordinates are out of maze bounds.
-        Returns the entry coordinates if valid.
+        Args:
+            exit_p: A tuple of (row, column) coordinates for the exit point.
+
+        Returns:
+            The exit coordinates if valid.
+
+        Raises:
+            ValueError: If the exit coordinates are out of maze bounds or
+                overlap with the entry point.
         """
         x, _ = entry
         if x < 0 or x > self._width - 1:
@@ -101,10 +128,9 @@ class MazeGenerator:
         else:
             return entry
 
-    def exit_setter(self, exit_p):
+    def exit_setter(self, exit_p: Tuple[int, int]) -> Tuple[int, int]:
         """
         Validate and set the maze exit point.
-
         Raises a ValueError if the exit coordinates are out of maze bounds
         or overlap with the entry point. Returns the exit coordinates if valid.
         """
@@ -118,18 +144,18 @@ class MazeGenerator:
         else:
             return exit_p
 
-    def maze_to_hex(self):
-        """
-        Save the maze walls as hexadecimal values to a file.
-        Writes each row of the maze as a line
-        of hex strings to `self._out_file`.
-        """
-        path = ""
-        i = 0
-        while i < len(self.path) - 1:
-            r , c = self.path[i]
-            r_n , c_n = self.path[i + 1]
+    def maze_to_hex(self) -> None:
+        """Save the maze walls as hexadecimal values to a file.
 
+        Writes each row of the maze as a lineof hex strings to the output file.
+        Also writes the entry point, exit point, and solution path.
+        """
+
+        path = ""
+        k = 0
+        while k < len(self.path) - 1:
+            r, c = self.path[k]
+            r_n, c_n = self.path[k + 1]
             if c < c_n:
                 path += "E"
             elif c > c_n:
@@ -138,18 +164,17 @@ class MazeGenerator:
                 path += "S"
             elif r > r_n:
                 path += "N"
-            i += 1
-
+            k += 1
         with open(self._out_file, 'w') as f:
             for i in self.maze:
                 for j in i:
                     f.write(str(hex(j["walls"]))[2:])
                 f.write("\n")
             f.write("\n")
-            entry = str(self._entry).strip('()')
+            entry: str = str(self._entry).strip('()')
             f.write(entry.replace(" ", ""))
             f.write("\n")
-            exit_p = str(self._exit_p).strip('()')
+            exit_p: str = str(self._exit_p).strip('()')
             f.write(exit_p.replace(" ", ""))
             f.write("\n")
             f.write(path)

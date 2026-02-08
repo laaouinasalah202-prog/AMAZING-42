@@ -1,6 +1,7 @@
-from maze_gen import prims_algo, backtrack_algo, shortest_path
+from maze_gen import prims_algo, backtrack_algo, shortest_path, MazeGenerator
 from display_maze import print_maze, display_path, colors, wall_colors
 from maze_gen.algorithms import imperfect_maze
+
 
 class MENU:
     """
@@ -29,21 +30,21 @@ class MENU:
         self.color: str = color
         self.algo_name: str = algo_name
 
-    def change_wall_color(self, new_color):
+    def change_wall_color(self, new_color: str) -> None:
         """
         Change the wall color if the new color exists in `wall_colors`.
         """
         if new_color.lower() in wall_colors.keys():
             self.wall_color = wall_colors[new_color]
 
-    def change_color(self, new_color):
+    def change_color(self, new_color: str) -> None:
         """
         Change the cell color if the new color exists in `colors`.
         """
         if new_color.lower() in colors.keys():
             self.color = colors[new_color]
 
-    def generate_maze(self, maze):
+    def generate_maze(self, maze: MazeGenerator) -> None:
         """
         Generate the maze using the selected algorithm and display it.
 
@@ -54,13 +55,13 @@ class MENU:
             prims_algo(maze, self.color, self.wall_color, print_maze)
         elif self.algo_name == "backtrack":
             backtrack_algo(maze, self.color, self.wall_color, print_maze)
-        if maze._perfect == False:
+        if maze._perfect is False:
             imperfect_maze(maze)
             print("\33c", end="")
             print_maze(maze, self.color, self.wall_color)
 
 
-def maze_menu(maze, menu):
+def maze_menu(maze: MazeGenerator, menu: MENU) -> None:
     """
     Display an interactive console menu for the maze.
 

@@ -1,14 +1,14 @@
 #WIDTH – the width of the maze
-width = 40
+width = 10
 
 #HEIGHT – the he.ight of the maze
-HEIGHT = 40
+HEIGHT = 10
 
 #ENTRY – starting point of the maze
 ENTRY= 0,0
 
 #EXIT – exit point of the maze
-exit= 39,39
+exit= 9,9
 
 #OUTPUT_FILE – file containing the maze in hexadecimal
 OUTPUT_FILE=maze.txt

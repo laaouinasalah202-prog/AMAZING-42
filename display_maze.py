@@ -1,4 +1,12 @@
+"""Maze visualization and display utilities.
+
+This module provides functions to render mazes in the terminal using
+Unicode box-drawing characters with customizable colors. It supports
+displaying static mazes and animating solution paths.
+"""
+
 import time
+from maze_gen import MazeGenerator
 
 colors = {
     "red": "\033[41m",
@@ -17,11 +25,22 @@ wall_colors = {
     "green": '\033[92m'}
 
 
-def print_maze(maze, colors, wall_color, path=False):
-    """
-    Print the maze to the console using ASCII/Unicode characters.
-    Displays walls, open spaces, and optionally the solution path.
-    Colors for walls and cells can be customized with `colors`&`wall_color`.
+def print_maze(maze: MazeGenerator,
+               colors: str,
+               wall_color: str,
+               path: bool = False
+               ) -> None:
+    """Print the maze to the console using Unicode box-drawing characters.
+
+    Displays walls, open spaces, and optionally the solution path with
+    customizable colors for walls and cells.
+
+    Args:
+        maze: A MazeGenerator instance containing the maze to display.
+        colors: ANSI color code for cell backgrounds.
+        wall_color: ANSI color code for wall characters.
+        path: If True, displays the solution path with bullet markers.
+            Defaults to False.
     """
     print("\033[H", end="")
     print("\033[?25l")
@@ -85,8 +104,8 @@ def print_maze(maze, colors, wall_color, path=False):
                         print("    ", end="")
                     if maze.maze[y][x + 1]["walls"] >> 2 & 1 == 0:
                         if all((maze.maze[y][x]["walls"] >> 2 & 1 == 0,
-                            maze.maze[y + 1][x]["walls"] >> 1 & 1 == 0,
-                            maze.maze[y][x]["walls"] >> 1 & 1 == 0)):
+                                maze.maze[y + 1][x]["walls"] >> 1 & 1 == 0,
+                                maze.maze[y][x]["walls"] >> 1 & 1 == 0)):
                             print(" ", end="")
                     if all((maze.maze[y][x]["walls"] >> 2 & 1 == 1,
                             maze.maze[y][x + 1]["walls"] >> 2 & 1 == 1)):
@@ -164,11 +183,16 @@ def print_maze(maze, colors, wall_color, path=False):
     print(wall_color+"╝"+"\033[0m")
 
 
-def display_path(maze, color, wall_color):
-    """
-    Animate the maze solution path step by step in the console.
+def display_path(maze: MazeGenerator, color: str, wall_color: str) -> None:
+    """Animate the maze solution path step by step in the console.
 
-    Marks each cell in `maze.path` and updates the display using `print_maze`.
+    Marks each cell in the solution path and updates the display,
+    creating an animation effect showing the path from entry to exit.
+
+    Args:
+        maze: A MazeGenerator instance containing the maze and solution path.
+        color: ANSI color code for cell backgrounds.
+        wall_color: ANSI color code for wall characters.
     """
     for x, y in maze.path:
         print("\33c", end="")
