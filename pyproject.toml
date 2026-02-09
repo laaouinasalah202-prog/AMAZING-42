@@ -1,16 +1,14 @@
 [project]
-name = "maze-gen"
+name = "maze_gen"
 version = "0.1.0"
-description = ""
+description = "A maze generation and pathfinding library implementing multiple algorithms (Prim's, Backtracking DFS, BFS)"
+readme = "PACKAGE_README.md"
 authors = [
     {name = "zboualam. slaaouin"}
 ]
+keywords = ["maze", "algorithms", "pathfinding", "bfs", "dfs", "prims"]
 requires-python = ">=3.10"
-dependencies = [
-    "mypy (>=1.19.1,<2.0.0)",
-    "flake8 (>=7.3.0,<8.0.0)",
-    "cleanpy (>=0.5.1,<0.6.0)"
-]
+dependencies = []
 
 
 [build-system]
