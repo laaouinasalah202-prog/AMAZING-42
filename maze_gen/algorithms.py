@@ -49,32 +49,31 @@ def get_neighbors(maze: List, coordinates: Tuple) -> List:
     return neighbors
 
 
-def remove_wall_between(cell1: Tuple, cell2: Tuple, maze: List) -> None:
-    """Remove the wall between two adjacent cells.
-
-    Args:
-        cell1: A tuple of (row, column) for the first cell.
-        cell2: A tuple of (row, column) for the second cell.
-        maze: A 2D list representing the maze grid.
-    """
+def remove_wall_between(
+        cell1: Tuple, cell2: Tuple, maze: MazeGenerator
+        ) -> None:
     r1, c1 = cell1
     r2, c2 = cell2
 
+    r = 2
+    le = 8
+    up = 1
+    dn = 4
     if r1 == r2:
         if c1 < c2:
-            maze[r1][c1]["walls"] -= 2
-            maze[r2][c2]["walls"] -= 8
+            maze.maze[r1][c1]["walls"] -= r
+            maze.maze[r2][c2]["walls"] -= le
         elif c1 > c2:
-            maze[r1][c1]["walls"] -= 8
-            maze[r2][c2]["walls"] -= 2
+            maze.maze[r1][c1]["walls"] -= le
+            maze.maze[r2][c2]["walls"] -= r
 
     elif c1 == c2:
         if r1 < r2:
-            maze[r1][c1]["walls"] -= 4
-            maze[r2][c2]["walls"] -= 1
+            maze.maze[r1][c1]["walls"] -= dn
+            maze.maze[r2][c2]["walls"] -= up
         elif r1 > r2:
-            maze[r1][c1]["walls"] -= 1
-            maze[r2][c2]["walls"] -= 4
+            maze.maze[r1][c1]["walls"] -= up
+            maze.maze[r2][c2]["walls"] -= dn
 
 
 def backtrack_algo(
@@ -109,32 +108,6 @@ def backtrack_algo(
     for a in coordinate:
         for x, y in a:
             visited[x][y] = True
-
-    def remove_wall_between(
-            cell1: Tuple, cell2: Tuple, maze: MazeGenerator
-            ) -> None:
-        r1, c1 = cell1
-        r2, c2 = cell2
-
-        r = 2
-        le = 8
-        up = 1
-        dn = 4
-        if r1 == r2:
-            if c1 < c2:
-                maze.maze[r1][c1]["walls"] -= r
-                maze.maze[r2][c2]["walls"] -= le
-            elif c1 > c2:
-                maze.maze[r1][c1]["walls"] -= le
-                maze.maze[r2][c2]["walls"] -= r
-
-        elif c1 == c2:
-            if r1 < r2:
-                maze.maze[r1][c1]["walls"] -= dn
-                maze.maze[r2][c2]["walls"] -= up
-            elif r1 > r2:
-                maze.maze[r1][c1]["walls"] -= up
-                maze.maze[r2][c2]["walls"] -= dn
 
     def backtrack(x: int, y: int, color: str, wall_color: str) -> None:
         print_maze(maze, color, wall_color)
@@ -188,7 +161,7 @@ def prims_algo(maze: MazeGenerator,
 
         if visited_neighbors:
             neighbor = random.choice(visited_neighbors)
-            remove_wall_between(current, neighbor, maze.maze)
+            remove_wall_between(current, neighbor, maze)
 
         print_maze(maze, color, wall_color)
         time.sleep(0.01)
@@ -339,7 +312,7 @@ def break_cell(maze: MazeGenerator, cell: Dict, coordinates: Tuple) -> None:
 
     neighbors = only_close_neighbors(maze.maze, coordinates)
     if neighbors:
-        remove_wall_between(coordinates, random.choice(neighbors), maze.maze)
+        remove_wall_between(coordinates, random.choice(neighbors), maze)
 
 
 def imperfect_maze(maze: MazeGenerator) -> None:
