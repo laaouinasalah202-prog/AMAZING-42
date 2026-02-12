@@ -56,10 +56,11 @@ def parssing(file_path: str) -> dict:
     requirements = [
         "WIDTH", "HEIGHT", "ENTRY", "EXIT", "OUTPUT_FILE", "PERFECT"
         ]
+
     try:
-        fd = open(file_path)
         with open(file_path) as fd:
             for line in fd:
+                line = line.strip(" ")
                 if line == '\n':
                     continue
                 if line.startswith("#") is False:
@@ -68,6 +69,11 @@ def parssing(file_path: str) -> dict:
                         raise SyntaxError(
                             f"Error: Invalid config format - '{temp[0]}'"
                             )
+                    elif temp[0].upper() not in requirements:
+                        if temp[0].lower() != "seed":
+                            raise SyntaxError(
+                                f"Error: Invalid config format - '{temp[0]}'"
+                                )
                     config.update({temp[0].upper(): temp[1]})
 
             for req in requirements:
@@ -75,6 +81,6 @@ def parssing(file_path: str) -> dict:
                     raise FileError(f"Error: Invalid config format - '{req}'")
             change_value(config)
             return config
-    except (FileError, FileNotFoundError) as e:
+    except (Exception) as e:
         print(f"{e}")
         exit(0)

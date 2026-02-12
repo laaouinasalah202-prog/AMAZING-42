@@ -104,7 +104,7 @@ class MazeGenerator:
         Raises a ValueError if the height is not between 8 and 25.
         Returns the height if valid.
         """
-        if height < 8:
+        if height < 10:
             raise ValueError(f"Error: Height {height} is below minimum 10")
         else:
             return height
@@ -180,6 +180,6 @@ class MazeGenerator:
                 f.write("\n")
                 f.write(path)
                 f.write("\n")
-        except (FileNotFoundError, PermissionError) as e:
+        except (Exception) as e:
             print(e)
             exit(0)

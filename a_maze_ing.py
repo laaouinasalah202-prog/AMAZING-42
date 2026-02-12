@@ -50,6 +50,7 @@ if __name__ == "__main__":
                       color=menu.color, wall_color=menu.wall_color)
         print("\33c", end="")
         print_maze(maze, menu.color, menu.wall_color)
+        maze.maze_to_hex()
         shortest_path(maze)
     except KeyboardInterrupt:
         print("\33c", end="")

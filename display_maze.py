@@ -62,6 +62,8 @@ def print_maze(maze: MazeGenerator,
         print(wall_color+"║", end="")
         while x < width:
             if x < width - 1:
+                # if (y, x) == maze._entry or (y, x) == maze._exit_p:
+                #     print()
                 if maze.maze[y][x]["walls"] == 15:
                     print(colors + "    " + "\033[0m"+wall_color+"║", end="")
                 elif maze.maze[y][x]["walls"] >> 1 & 1 == 1:
