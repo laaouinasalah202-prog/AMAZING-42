@@ -1,5 +1,5 @@
 [project]
-name = "maze_gen"
+name = "mazegen"
 version = "0.1.0"
 description = "A maze generation and pathfinding library implementing multiple algorithms (Prim's, Backtracking DFS, BFS)"
 readme = "PACKAGE_README.md"

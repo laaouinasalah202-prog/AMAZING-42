@@ -165,17 +165,21 @@ class MazeGenerator:
             elif r > r_n:
                 path += "N"
             k += 1
-        with open(self._out_file, 'w') as f:
-            for i in self.maze:
-                for j in i:
-                    f.write(str(hex(j["walls"]))[2:])
+        try:
+            with open(self._out_file, 'w') as f:
+                for i in self.maze:
+                    for j in i:
+                        f.write(str(hex(j["walls"]))[2:])
+                    f.write("\n")
                 f.write("\n")
-            f.write("\n")
-            entry: str = str(self._entry).strip('()')
-            f.write(entry.replace(" ", ""))
-            f.write("\n")
-            exit_p: str = str(self._exit_p).strip('()')
-            f.write(exit_p.replace(" ", ""))
-            f.write("\n")
-            f.write(path)
-            f.write("\n")
+                entry: str = str(self._entry).strip('()')
+                f.write(entry.replace(" ", ""))
+                f.write("\n")
+                exit_p: str = str(self._exit_p).strip('()')
+                f.write(exit_p.replace(" ", ""))
+                f.write("\n")
+                f.write(path)
+                f.write("\n")
+        except (FileNotFoundError, PermissionError) as e:
+            print(e)
+            exit(0)

@@ -60,8 +60,6 @@ def parssing(file_path: str) -> dict:
         fd = open(file_path)
         with open(file_path) as fd:
             for line in fd:
-                # if "output_file" not in line.lower():
-                #     line = line.upper()
                 if line == '\n':
                     continue
                 if line.startswith("#") is False:

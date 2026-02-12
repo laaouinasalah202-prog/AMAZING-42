@@ -1,4 +1,4 @@
-from maze_gen import MazeGenerator, shortest_path
+from mazegen import MazeGenerator, shortest_path, generate_maze
 from parssing import parssing
 import sys
 from menu import MENU, maze_menu
@@ -46,7 +46,7 @@ if __name__ == "__main__":
         menu = MENU(False, "\033[94m", "\033[47m", "prims")
         maze = MazeGenerator(
             width, height, entry, exit_p, out_file, perfect, seed)
-        menu.generate_maze(maze)
+        generate_maze(maze, "prims", print_maze, menu.color, menu.wall_color)
         print("\33c", end="")
         print_maze(maze, menu.color, menu.wall_color)
         shortest_path(maze)

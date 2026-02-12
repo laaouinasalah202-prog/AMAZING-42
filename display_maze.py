@@ -6,7 +6,7 @@ displaying static mazes and animating solution paths.
 """
 
 import time
-from maze_gen import MazeGenerator
+from mazegen import MazeGenerator
 
 colors = {
     "red": "\033[41m",

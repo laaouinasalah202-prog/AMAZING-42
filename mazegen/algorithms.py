@@ -7,8 +7,8 @@ It also includes utilities for wall manipulation and creating imperfect mazes.
 
 
 import random
-from maze_gen import MazeGenerator
-from typing import List, Tuple, Callable, Dict
+from mazegen import MazeGenerator
+from typing import List, Tuple, Callable, Dict, Any
 import time
 
 
@@ -76,10 +76,11 @@ def remove_wall_between(
             maze.maze[r2][c2]["walls"] -= dn
 
 
-def backtrack_algo(
-        maze: MazeGenerator, color: str,
-        wall_color: str, print_maze: Callable
-        ) -> None:
+def backtrack_algo(maze: MazeGenerator,
+                   color: str = "\033[47m",
+                   wall_color: str = "\033[94m",
+                   print_maze: Callable = None
+                   ) -> MazeGenerator:
     """Generate a maze using the recursive backtracking (DFS) algorithm.
 
     Optionally displays the maze generation process step by step.
@@ -110,8 +111,9 @@ def backtrack_algo(
             visited[x][y] = True
 
     def backtrack(x: int, y: int, color: str, wall_color: str) -> None:
-        print_maze(maze, color, wall_color)
-        time.sleep(0.01)
+        if print_maze is not None:
+            print_maze(maze, color, wall_color)
+            time.sleep(0.01)
         visited[x][y] = True
 
         for dx, dy in random.sample(dirs, len(dirs)):
@@ -123,8 +125,9 @@ def backtrack_algo(
 
 
 def prims_algo(maze: MazeGenerator,
-               color: str, wall_color: str,
-               print_maze: Callable
+               color: str = "\033[47m",
+               wall_color: str = "\033[94m",
+               print_maze: Callable = None
                ) -> MazeGenerator:
     """Generate a maze using Prim's algorithm.
 
@@ -162,9 +165,9 @@ def prims_algo(maze: MazeGenerator,
         if visited_neighbors:
             neighbor = random.choice(visited_neighbors)
             remove_wall_between(current, neighbor, maze)
-
-        print_maze(maze, color, wall_color)
-        time.sleep(0.01)
+        if print_maze is not None:
+            print_maze(maze, color, wall_color)
+            time.sleep(0.01)
     return maze
 
 
@@ -226,6 +229,8 @@ def shortest_path(maze: MazeGenerator) -> None:
                 parent.update({neighbor: current})
                 cells.append(neighbor)
 
+    if current != maze._exit_p:
+        exit(0)
     current = maze._exit_p
     while current != maze._entry:
         x, y = current
@@ -332,3 +337,22 @@ def imperfect_maze(maze: MazeGenerator) -> None:
                 break_cell(maze, cell, (r, c))
             c += 1
         r += 1
+
+
+def generate_maze(maze: MazeGenerator,
+                  algo_name="prims",
+                  print_maze=None, color=None,
+                  wall_color=None) -> List[Dict]:
+    """
+    Generate the maze using the selected algorithm and display it.
+    Calls `prims_algo` or `backtrack_algo` based on `algo_name`
+    and prints the maze.
+    """
+    maze.creat_maze()
+    if algo_name == "prims":
+        prims_algo(maze, color, wall_color, print_maze)
+    elif algo_name == "backtrack":
+        backtrack_algo(maze, color, wall_color, print_maze)
+    if maze._perfect is False:
+        imperfect_maze(maze)
+    return maze.maze

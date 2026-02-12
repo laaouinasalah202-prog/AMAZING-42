@@ -1,6 +1,5 @@
-from maze_gen import prims_algo, backtrack_algo, shortest_path, MazeGenerator
+from mazegen import shortest_path, MazeGenerator, generate_maze
 from display_maze import print_maze, display_path, colors, wall_colors
-from maze_gen.algorithms import imperfect_maze
 
 
 class MENU:
@@ -44,22 +43,6 @@ class MENU:
         if new_color.lower() in colors.keys():
             self.color = colors[new_color]
 
-    def generate_maze(self, maze: MazeGenerator) -> None:
-        """
-        Generate the maze using the selected algorithm and display it.
-
-        Calls `prims_algo` or `backtrack_algo` based on `algo_name`
-        and prints the maze.
-        """
-        if self.algo_name == "prims":
-            prims_algo(maze, self.color, self.wall_color, print_maze)
-        elif self.algo_name == "backtrack":
-            backtrack_algo(maze, self.color, self.wall_color, print_maze)
-        if maze._perfect is False:
-            imperfect_maze(maze)
-            print("\33c", end="")
-            print_maze(maze, self.color, self.wall_color)
-
 
 def maze_menu(maze: MazeGenerator, menu: MENU) -> None:
     """
@@ -84,9 +67,12 @@ def maze_menu(maze: MazeGenerator, menu: MENU) -> None:
     choice = input()
     if choice == '1':
         print("\33c", end="")
+        MENU.first_gen = True
         maze.maze = maze.creat_maze()
-        menu.generate_maze(maze)
+        generate_maze(maze, menu.algo_name, print_maze,
+                      menu.color, menu.wall_color)
         shortest_path(maze)
+        print_maze(maze, menu.color, menu.wall_color)
     elif choice == "2":
         if menu.path:
             menu.path = False
@@ -128,8 +114,8 @@ def maze_menu(maze: MazeGenerator, menu: MENU) -> None:
     elif choice == "5":
         print("\33c", end="")
         print_maze(maze, menu.color, menu.wall_color)
-        print(f"Maze saved to {maze._out_file}\n")
         maze.maze_to_hex()
+        print(f"Maze saved to {maze._out_file}\n")
     elif choice == "6":
         exit(0)
     else:

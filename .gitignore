@@ -1,5 +1,6 @@
 *.txt
 !config.txt
+!requirements.txt
 
 *.pyc
 __pycache__/

@@ -8,7 +8,7 @@ This `pyproject.toml` configures your project to build **only the `maze_gen` pac
 
 ✅ **Included in package:**
 ```
-maze_gen/
+mazegen/
 ├── __init__.py
 ├── maze.py
 └── algorithms.py
@@ -23,7 +23,7 @@ maze_gen/
 ### Package Discovery
 ```toml
 [tool.setuptools.packages.find]
-include = ["maze_gen*"]  # Only build maze_gen folder
+include = ["mazegen*"]  # Only build mazegen folder
 ```
 
 ### Dependencies
@@ -41,7 +41,7 @@ dev = ["mypy>=1.19.1", "flake8>=7.3.0", "cleanpy>=0.5.1"]
 pip install .
 ```
 ```python
-from maze_gen import MazeGenerator, prims_algo, shortest_path
+from mazegen import MazeGenerator, prims_algo, shortest_path
 maze = MazeGenerator(10, 10, (0,0), (9,9), "out.txt", True, None)
 ```
 
@@ -58,18 +58,18 @@ python3 a_maze_ing.py config.txt
 ```bash
 pip install build
 python -m build
-# Creates: dist/maze_gen-0.1.0-py3-none-any.whl
+# Creates: dist/mazegen-0.1.0-py3-none-any.whl
 ```
 
 ## Testing the Build
 
 ```bash
 # Verify contents
-tar -tzf dist/maze_gen-0.1.0.tar.gz
+tar -tzf dist/mazegen-0.1.0.tar.gz
 
 # Test in clean environment
 python -m venv test_env
 source test_env/bin/activate
-pip install dist/maze_gen-0.1.0-py3-none-any.whl
+pip install dist/mazegen-0.1.0-py3-none-any.whl
 deactivate
 ```
