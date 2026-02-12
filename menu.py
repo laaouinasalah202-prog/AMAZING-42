@@ -69,8 +69,13 @@ def maze_menu(maze: MazeGenerator, menu: MENU) -> None:
         print("\33c", end="")
         MENU.first_gen = True
         maze.maze = maze.creat_maze()
-        generate_maze(maze, menu.algo_name, print_maze,
-                      menu.color, menu.wall_color)
+        generate_maze(
+            maze,
+            menu.algo_name,
+            print_maze,
+            color=menu.color,
+            wall_color=menu.wall_color
+            )
         shortest_path(maze)
         print_maze(maze, menu.color, menu.wall_color)
     elif choice == "2":

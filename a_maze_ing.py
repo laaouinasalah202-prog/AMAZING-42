@@ -46,7 +46,8 @@ if __name__ == "__main__":
         menu = MENU(False, "\033[94m", "\033[47m", "prims")
         maze = MazeGenerator(
             width, height, entry, exit_p, out_file, perfect, seed)
-        generate_maze(maze, "prims", print_maze, menu.color, menu.wall_color)
+        generate_maze(maze, "prims", print_maze,
+                      color=menu.color, wall_color=menu.wall_color)
         print("\33c", end="")
         print_maze(maze, menu.color, menu.wall_color)
         shortest_path(maze)

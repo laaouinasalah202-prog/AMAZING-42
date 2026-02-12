@@ -8,7 +8,7 @@ It also includes utilities for wall manipulation and creating imperfect mazes.
 
 import random
 from mazegen import MazeGenerator
-from typing import List, Tuple, Callable, Dict, Any
+from typing import List, Tuple, Callable, Dict, Any, Optional
 import time
 
 
@@ -79,8 +79,8 @@ def remove_wall_between(
 def backtrack_algo(maze: MazeGenerator,
                    color: str = "\033[47m",
                    wall_color: str = "\033[94m",
-                   print_maze: Callable = None
-                   ) -> MazeGenerator:
+                   print_maze: Optional[Callable[..., Any]] = None
+                   ) -> None:
     """Generate a maze using the recursive backtracking (DFS) algorithm.
 
     Optionally displays the maze generation process step by step.
@@ -127,7 +127,7 @@ def backtrack_algo(maze: MazeGenerator,
 def prims_algo(maze: MazeGenerator,
                color: str = "\033[47m",
                wall_color: str = "\033[94m",
-               print_maze: Callable = None
+               print_maze: Optional[Callable[..., Any]] = None
                ) -> MazeGenerator:
     """Generate a maze using Prim's algorithm.
 
@@ -340,9 +340,11 @@ def imperfect_maze(maze: MazeGenerator) -> None:
 
 
 def generate_maze(maze: MazeGenerator,
-                  algo_name="prims",
-                  print_maze=None, color=None,
-                  wall_color=None) -> List[Dict]:
+                  algo_name: str = "prims",
+                  print_maze: Optional[Callable[..., Any]] = None,
+                  *,
+                  color: str,
+                  wall_color: str) -> List[Dict]:
     """
     Generate the maze using the selected algorithm and display it.
     Calls `prims_algo` or `backtrack_algo` based on `algo_name`
