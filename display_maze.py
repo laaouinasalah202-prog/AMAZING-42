@@ -62,8 +62,22 @@ def print_maze(maze: MazeGenerator,
         print(wall_color+"║", end="")
         while x < width:
             if x < width - 1:
-                # if (y, x) == maze._entry or (y, x) == maze._exit_p:
-                #     print()
+                if (y, x) == maze._entry:
+                    print("\033[91m  E \033[0m"+wall_color, end="")
+                    if maze.maze[y][x]["walls"] >> 1 & 1 == 1:
+                        print("║", end="")
+                    else:
+                        print(" ", end="")
+                    x += 1
+                    continue
+                elif (y, x) == maze._exit_p:
+                    print("\033[91m  X \033[0m"+wall_color, end="")
+                    if maze.maze[y][x]["walls"] >> 1 & 1 == 1:
+                        print("║", end="")
+                    else:
+                        print(" ", end="")
+                    x += 1
+                    continue
                 if maze.maze[y][x]["walls"] == 15:
                     print(colors + "    " + "\033[0m"+wall_color+"║", end="")
                 elif maze.maze[y][x]["walls"] >> 1 & 1 == 1:
@@ -77,14 +91,17 @@ def print_maze(maze: MazeGenerator,
                     else:
                         print("     ", end="")
             x += 1
-        if maze.maze[y][width-1]["walls"] == 15:
+        if (y, width-1) == maze._entry:
+            print("\033[91m  E \033[0m"+wall_color+"║")
+        elif (y, width-1) == maze._exit_p:
+            print("\033[91m  X \033[0m"+wall_color+"║")
+        elif maze.maze[y][width-1]["walls"] == 15:
             print(colors + "    " + "\033[0m"+wall_color+"║")
         else:
             if maze.maze[y][width - 1].get("path", False) and path:
                 print("  • ║")
             else:
                 print("    ║")
-
         x = 0
         while x < width - 1:
             if y < height - 1:
