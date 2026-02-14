@@ -1,0 +1,63 @@
+from mazegen import MazeGenerator, shortest_path, generate_maze
+from parssing import parssing
+import sys
+from menu import MENU, maze_menu
+from display_maze import print_maze
+
+if __name__ == "__main__":
+    """Main script to generate and interact with a maze.
+
+    This module serves as the entry point for the maze generation and
+    interaction program. It reads configuration from a file, generates
+    a maze using a selected algorithm, computes the shortest path, and
+    launches an interactive menu.
+
+    Usage:
+        python3 a_maze_ing.py config.txt
+
+    The configuration file should contain maze parameters such as WIDTH,
+    HEIGHT, ENTRY, EXIT, OUTPUT_FILE, PERFECT, and optionally SEED.
+    """
+    print("\033[2J")
+    print("\033[3J")
+
+    if len(sys.argv) == 1:
+        print("Usage: python3 a_maze_ing.py config.txt")
+        exit(0)
+    else:
+        file_path = sys.argv[1]
+    n_config = parssing(file_path)
+    try:
+        width = n_config["WIDTH"]
+        height = n_config["HEIGHT"]
+        entry = n_config["ENTRY"]
+        exit_p = n_config["EXIT"]
+        out_file = n_config["OUTPUT_FILE"]
+        perfect = n_config["PERFECT"]
+        seed = None
+        if "seed" in [c.lower() for c in n_config]:
+            seed = n_config["SEED"]
+        maze = MazeGenerator(
+            width, height, entry, exit_p, out_file, perfect, seed)
+    except Exception as e:
+        print(f"Error: {e}")
+        exit(0)
+    try:
+        menu = MENU(False, "\033[94m", "\033[47m", "prims")
+        maze = MazeGenerator(
+            width, height, entry, exit_p, out_file, perfect, seed)
+        generate_maze(maze, "prims", print_maze,
+                      color=menu.color, wall_color=menu.wall_color)
+        print("\33c", end="")
+        print_maze(maze, menu.color, menu.wall_color)
+        maze.maze_to_hex()
+        shortest_path(maze)
+    except KeyboardInterrupt:
+        print("\33c", end="")
+        exit(0)
+    while True:
+        try:
+            maze_menu(maze, menu)
+        except KeyboardInterrupt:
+            print("\33c", end="")
+            exit(0)
